@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Xml.Serialization;
-using Unity.Mathematics;
+﻿
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -15,6 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _fireRate = 0.25f;
     private float _canFire = 0.0f;
+    private int lives = 3;
 
     // Start is called before the first frame update
     [SerializeField] private float speed = 5f;
@@ -22,6 +22,10 @@ public class Player : MonoBehaviour
     //variable used for triple shoot
     [SerializeField]
     public bool canTripleShot = false;
+
+    //Variable used for speed boost
+    public bool isSpeedBoostActive = false;
+
 
 
     void Start()
@@ -76,9 +80,10 @@ public class Player : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
+
+
         //let player move up/down or left/right
-        transform.Translate(Vector3.right * speed * horizontalInput * Time.deltaTime);
-        transform.Translate(Vector3.up * speed * verticalInput * Time.deltaTime);
+
 
         //adding control to not cross over the map limit
         if (transform.position.x > 8.0f)
@@ -97,6 +102,19 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, -4.2f, 0);
         }
+
+        //implementing speed boost
+        if (isSpeedBoostActive)
+        {
+            transform.Translate(Vector3.right * speed * 1.5f *  horizontalInput * Time.deltaTime);
+            transform.Translate(Vector3.up * speed * 1.5f * verticalInput * Time.deltaTime);
+
+        } else
+
+        {
+            transform.Translate(Vector3.right * speed * horizontalInput * Time.deltaTime);
+            transform.Translate(Vector3.up * speed * verticalInput * Time.deltaTime);
+        }
     }
 
     public void TripleShotPowerUpOn()
@@ -110,6 +128,42 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         canTripleShot = false;
     }
+
+
+    //method for speed boost enable/disable
+    public void SpeedBoostPowerupOn()
+    {
+        isSpeedBoostActive = true;
+        StartCoroutine(SpeedBoostDownRoutine());
+
+    }
+
+    public IEnumerator SpeedBoostDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        isSpeedBoostActive = false;
+    }
+
+    public void Damage()
+    {
+        //subtract 1 life from the player
+        //if lives < 1 destroy the player
+        lives--;
+
+        if (lives < 1)
+        {
+            Destroy(this.gameObject);
+        }
+
+    }
+
+
+
+
+
+
+
+
 
 
 }
