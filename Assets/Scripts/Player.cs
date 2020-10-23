@@ -10,10 +10,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _tripleShotPrefab;
 
+    [SerializeField]
+    private GameObject _explosionPrefab;
+
     //Player's fireRate 0.25f
     [SerializeField]
     private float _fireRate = 0.25f;
     private float _canFire = 0.0f;
+
+    [SerializeField]
     private int lives = 3;
 
     // Start is called before the first frame update
@@ -152,6 +157,7 @@ public class Player : MonoBehaviour
 
         if (lives < 1)
         {
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
 
