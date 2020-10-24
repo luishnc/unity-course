@@ -37,12 +37,14 @@ public class Player : MonoBehaviour
     public bool isShieldActive = false;
 
     private UIManager _uiManager;
+    private GameManager _gameManager;
+    private SpawnManager _spawnManager;
 
 
 
     void Start()
     {
-        Debug.Log("Start is called");
+
         //Initial position
         transform.position = new Vector3(0, 0, 0);
 
@@ -51,6 +53,14 @@ public class Player : MonoBehaviour
         if (_uiManager != null)
         {
             _uiManager.UpdateLives(lives);
+        }
+
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        if(_spawnManager != null)
+        {
+            _spawnManager.StartSpawnRoutines();
         }
     }
 
@@ -184,6 +194,8 @@ public class Player : MonoBehaviour
         if (lives < 1)
         {
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+            _gameManager.gameOver = true;
+            _uiManager.ShowTitleScreen();
             Destroy(this.gameObject);
         }
 

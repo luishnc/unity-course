@@ -2,17 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawn_Manager : MonoBehaviour
+public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject enemyShipPrefab;
 
     [SerializeField]
     private GameObject[] powerups;
+
+    private GameManager _gameManager;
     
 
     // Start is called before the first frame update
     void Start()
+    {
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        StartCoroutine(EnemySpawn());
+        StartCoroutine(PowerupSpawnRoutine());
+    }
+
+    public void StartSpawnRoutines()
     {
         StartCoroutine(EnemySpawn());
         StartCoroutine(PowerupSpawnRoutine());
@@ -20,7 +29,7 @@ public class Spawn_Manager : MonoBehaviour
 
     IEnumerator EnemySpawn()
     {
-        while (true)
+        while (_gameManager.gameOver == false)
         {
             float randomXPosition = Random.Range(-7f, 7f);
             Instantiate(enemyShipPrefab, new Vector3(randomXPosition, 7, 0), Quaternion.identity);
@@ -31,7 +40,7 @@ public class Spawn_Manager : MonoBehaviour
 
     IEnumerator PowerupSpawnRoutine()
     {
-        while (true)
+        while (_gameManager.gameOver == false)
         {
             float randomXPosition = Random.Range(-7f, 7f);
             int randomPowerup = Random.Range(0, 3);

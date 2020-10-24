@@ -11,11 +11,14 @@ public class Enemy : MonoBehaviour
     private float _speed = 5.0f;
 
 
+    private UIManager _uIManager;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
+        _uIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
     }
 
@@ -44,6 +47,7 @@ public class Enemy : MonoBehaviour
 
             Destroy(other.gameObject);
             Instantiate(_enemyExplosionPrefab, transform.position, Quaternion.identity);
+            _uIManager.UpdateScore();
             Destroy(this.gameObject);
         }
         else if (other.tag == "Player")
