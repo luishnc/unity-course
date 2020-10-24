@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
 
     public bool isShieldActive = false;
 
+    private UIManager _uiManager;
+
 
 
     void Start()
@@ -43,6 +45,13 @@ public class Player : MonoBehaviour
         Debug.Log("Start is called");
         //Initial position
         transform.position = new Vector3(0, 0, 0);
+
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+        if (_uiManager != null)
+        {
+            _uiManager.UpdateLives(lives);
+        }
     }
 
     // Update is called once per frame
@@ -169,6 +178,8 @@ public class Player : MonoBehaviour
         //subtract 1 life from the player
         //if lives < 1 destroy the player
         lives--;
+        _uiManager.UpdateLives(lives);
+
 
         if (lives < 1)
         {
