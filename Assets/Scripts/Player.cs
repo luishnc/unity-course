@@ -13,6 +13,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _explosionPrefab;
 
+    [SerializeField]
+    private GameObject _shieldPrefab;
+
     //Player's fireRate 0.25f
     [SerializeField]
     private float _fireRate = 0.25f;
@@ -25,11 +28,13 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed = 5f;
 
     //variable used for triple shoot
-    [SerializeField]
     public bool canTripleShot = false;
 
     //Variable used for speed boost
     public bool isSpeedBoostActive = false;
+
+
+    public bool isShieldActive = false;
 
 
 
@@ -66,13 +71,13 @@ public class Player : MonoBehaviour
             if (canTripleShot == true)
             {
                 Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
-                
+
             }
 
             else
             {
                 Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.88f, 0), Quaternion.identity);
-             
+
             }
 
             _canFire = Time.time + _fireRate;
@@ -111,10 +116,11 @@ public class Player : MonoBehaviour
         //implementing speed boost
         if (isSpeedBoostActive)
         {
-            transform.Translate(Vector3.right * speed * 1.5f *  horizontalInput * Time.deltaTime);
+            transform.Translate(Vector3.right * speed * 1.5f * horizontalInput * Time.deltaTime);
             transform.Translate(Vector3.up * speed * 1.5f * verticalInput * Time.deltaTime);
 
-        } else
+        }
+        else
 
         {
             transform.Translate(Vector3.right * speed * horizontalInput * Time.deltaTime);
@@ -151,6 +157,15 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+
+        //implementing shield funcionality
+        if (isShieldActive)
+        {
+            isShieldActive = false;
+            _shieldPrefab.SetActive(false);
+            return;
+        }
+
         //subtract 1 life from the player
         //if lives < 1 destroy the player
         lives--;
@@ -163,7 +178,11 @@ public class Player : MonoBehaviour
 
     }
 
-
+    public void enableShield()
+    {
+        isShieldActive = true;
+        _shieldPrefab.SetActive(true);
+    }
 
 
 
