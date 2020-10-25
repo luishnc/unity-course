@@ -13,13 +13,15 @@ public class Enemy : MonoBehaviour
 
     private UIManager _uIManager;
 
+    [SerializeField]
+    private AudioClip _audioClip;
 
 
     // Start is called before the first frame update
     void Start()
     {
         _uIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-
+        
     }
 
     // Update is called once per frame
@@ -48,6 +50,7 @@ public class Enemy : MonoBehaviour
             Destroy(other.gameObject);
             Instantiate(_enemyExplosionPrefab, transform.position, Quaternion.identity);
             _uIManager.UpdateScore();
+            AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position, 1f);
             Destroy(this.gameObject);
         }
         else if (other.tag == "Player")
@@ -59,6 +62,7 @@ public class Enemy : MonoBehaviour
             }
 
             Instantiate(_enemyExplosionPrefab, transform.position, Quaternion.identity);
+            AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position, 1f);
             Destroy(this.gameObject);
         }
 
